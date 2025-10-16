@@ -1,16 +1,6 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
+# deployments.tfdeploy.hcl
 
 deployment "simple" {
-  inputs = {
-    prefix           = "simple"
-    instances        = 1
-  }
-}
-
-deployment "complex" {
-  inputs = {
-    prefix           = "complex"
-    instances        = 3
-  }
+  # Remove 'inputs' entirely if the example does not require overrides
+  # inputs = {}
 }

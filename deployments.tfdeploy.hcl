@@ -1,5 +1,6 @@
 # deployments.tfdeploy.hcl
 
 deployment "simple" {
-  components = ["pet", "nulls"]
+  # Remove 'inputs' entirely if the example does not require overrides
+  # inputs = {}
 }

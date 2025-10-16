@@ -1,8 +1,5 @@
 # deployments.tfdeploy.hcl
 
 deployment "simple" {
-  inputs = {
-    prefix    = "ray"
-    instances = 2
-  }
+  components = ["pet", "nulls"]
 }

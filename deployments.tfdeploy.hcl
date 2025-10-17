@@ -14,3 +14,11 @@ deployment "complex" {
     instances        = 3
   }
 }
+
+deployment "app" {
+  inputs = {
+    name      = "hug-nginx"
+    image     = "nginx:alpine"
+    host_port = 8080
+  }
+}

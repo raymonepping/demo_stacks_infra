@@ -9,6 +9,16 @@ variable "instances" {
   type = number
 }
 
+variable "host_port" {
+  type    = number
+  default = 8080
+}
+
+variable "image" {
+  type    = string
+  default = "nginx:alpine"
+}
+
 required_providers {
   docker = {
     source  = "kreuzwerker/docker"
@@ -58,9 +68,9 @@ component "nulls" {
 component "app" {
   source = "./app"
   inputs = {
-    name      = "hug-nginx"
-    image     = "nginx:alpine"
-    host_port = 8080
+    name      = "hug-nginx-${var.prefix}"
+    image     = var.image
+    host_port = var.host_port
   }
   providers = {
     docker = provider.docker.this

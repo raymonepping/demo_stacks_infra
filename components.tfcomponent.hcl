@@ -38,7 +38,7 @@ component "pet" {
 component "nulls" {
   source = "./nulls"
   inputs = {
-    pet       = components.pet.outputs.name   # <- correct GA syntax
+    pet       = component.pet.outputs.name   # <- correct GA syntax
     instances = var.instances
   }
   providers = {

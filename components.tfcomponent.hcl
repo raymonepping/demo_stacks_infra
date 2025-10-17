@@ -28,7 +28,7 @@ required_providers {
 
 provider "random" "this" {}
 provider "null" "this" {}
-provider "docker" {}
+provider "docker" this {}
 
 component "pet" {
   source = "./pet"
@@ -57,14 +57,13 @@ component "nulls" {
 
 component "app" {
   source = "./app"
-  # Optional, if you want the container name to include the pet
   inputs = {
     name      = "hug-nginx"
     image     = "nginx:alpine"
     host_port = 8080
   }
   providers = {
-    docker = provider.docker
+    docker = provider.docker.this
   }
-  depends_on = [component.pet]  # ensures pet evaluates first if you reference it
+  depends_on = [component.pet]
 }

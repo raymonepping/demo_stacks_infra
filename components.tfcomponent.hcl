@@ -20,7 +20,6 @@ required_providers {
     version = "~> 3.5.1"
   }
 
-
   null = {
     source  = "hashicorp/null"
     version = "~> 3.2.2"
@@ -29,6 +28,7 @@ required_providers {
 
 provider "random" "this" {}
 provider "null" "this" {}
+provider "docker" {}
 
 component "pet" {
   source = "./pet"
@@ -53,4 +53,18 @@ component "nulls" {
   providers = {
     null = provider.null.this
   }
+}
+
+component "app" {
+  source = "./app"
+  # Optional, if you want the container name to include the pet
+  inputs = {
+    name      = "hug-nginx"
+    image     = "nginx:alpine"
+    host_port = 8080
+  }
+  providers = {
+    docker = provider.docker
+  }
+  depends_on = [component.pet]  # ensures pet evaluates first if you reference it
 }

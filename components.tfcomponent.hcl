@@ -38,10 +38,14 @@ component "pet" {
 component "nulls" {
   source = "./nulls"
   inputs = {
-    pet       = component.pet.outputs.name   # <- correct GA syntax
+    pet       = component.pet.outputs.name
     instances = var.instances
   }
   providers = {
     null = provider.null.this
   }
+
+  # Explicitly order nulls after pet
+  depends_on = [component.pet]
 }
+

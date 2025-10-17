@@ -26,7 +26,6 @@ variable "host_port" {
   default = 8080
 }
 
-provider "docker" {}
 
 resource "docker_image" "nginx" {
   name         = var.image

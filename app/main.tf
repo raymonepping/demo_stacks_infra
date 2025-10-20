@@ -16,9 +16,9 @@ variable "name" { type      = string default = "hug-nginx" }
 variable "host_port" { type = number default = 8080 }
 
 # Optional attachments
-variable "network_name" { type = string, default = null }
-variable "volume_name"  { type = string, default = null }
-variable "mount_path"   { type = string, default = "/usr/share/nginx/html" }
+variable "network_name" { type = string default = null }
+variable "volume_name"  { type = string default = null }
+variable "mount_path"   { type = string default = "/usr/share/nginx/html" }
 
 resource "docker_image" "nginx" {
   name         = var.image

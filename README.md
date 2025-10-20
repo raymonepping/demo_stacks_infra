@@ -1,24 +1,61 @@
-# pet-nulls-stack
+# demo_stacks_infra
 
-_This is an example stack configuration for the private preview of Terraform Stacks. Language
-constructs and features are subject to change given feedback received during this preview. Do not
-use Stacks for production workloads at this time._
+This repository contains the **infrastructure Stack** for the HUG workshop.
+It provisions the Docker **network**, **volumes**, and a basic **NGINX container**.
+It also **publishes outputs** that can be consumed by downstream Stacks (such as [`demo_stacks_app`](https://github.com/raymonepping/demo_stacks_app)).
 
-![pet-nulls-stack](https://github.com/hashicorp/pet-nulls-stack/assets/2430490/5c0d2c31-683f-4dec-a3f4-2c9ff18aeef3)
+## Overview
 
-This is a stack using two components, two environments, and the `random_pet` and `null_resource`
-resources. The purpose is a no-authentication, state-only test of the stacks concepts. No identity
-tokens are defined for OIDC authentication, no real infrastructure is provisioned, no cost will be
-incurred.
+* **Components**:
 
-_We do not recommend using this example within production accounts._
+  * `network` → creates Docker networks
+  * `storage` → provisions Docker volumes
+  * `app` → runs a simple NGINX container on top of the above
+* **Deployments**:
 
-## Usage
+  * `development` → isolated dev network + volumes
+  * `production` → isolated prod network + volumes
 
-_Prerequisites: You must have a Terraform Cloud account with access to the private preview of
-Terraform Stacks and a GitHub account._
+## Published Outputs
 
-1. **Fork this repository** to your own GitHub account, such that you can edit this stack configuration
-   for your purposes.
-2. **Create a new stack** in Terraform Cloud and connect it to your forked configuration repository.
-3. **"Provision" away!** Remember, this is a state-only example with no external effects.
+This Stack publishes key values that can be consumed by other Stacks:
+
+* `dev_app_url`, `prod_app_url` → container endpoints
+* `dev_network_name`, `prod_network_name` → Docker networks
+* `dev_volume_names`, `prod_volume_names` → attached volumes
+
+## Prerequisites
+
+* Terraform **v1.13.x** or newer (Stacks GA requires 1.13+)
+* Access to HCP Terraform with an Agent Pool that has Docker access
+
+## Quickstart
+
+1. Run the bootstrap script (clones both repos, validates, inits):
+
+   ```bash
+   bash setup_stacks.sh ~/work/hug-stacks
+   ```
+2. In HCP Terraform:
+
+   * Create a new Stack and connect it to this repo.
+   * Set execution mode to **Agent** and select your Agent Pool.
+   * Deploy `development` and/or `production`.
+
+## Local Verification
+
+On the Agent host, after deploy:
+
+```bash
+docker network ls | grep stacks_net_
+docker volume ls  | grep stacks_vol_
+docker ps --format 'table {{.Names}}\t{{.Ports}}' | grep hug-nginx
+curl -I http://localhost:8080  # dev
+curl -I http://localhost:8081  # prod
+```
+
+## Notes
+
+* This Stack is upstream to [`demo_stacks_app`](https://github.com/raymonepping/demo_stacks_app).
+* Outputs published here can be consumed via `upstream_input` in other Stacks.
+* This repository is designed for workshop/demo use, not production.

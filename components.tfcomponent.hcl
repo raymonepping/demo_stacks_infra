@@ -20,17 +20,17 @@ variable "image" {
 }
 
 variable "network_name"   { 
-  type = string, 
+  type = string 
   default = "stacks_net" 
 }
 
 variable "volume_name"    { 
-  type = string, 
+  type = string
   default = "stacks_vol" 
 }
 
 variable "mount_path"     { 
-  type = string, 
+  type = string
   default = "/usr/share/nginx/html" 
 }
 

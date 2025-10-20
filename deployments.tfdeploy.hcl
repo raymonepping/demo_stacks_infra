@@ -5,6 +5,7 @@ deployment "simple" {
   inputs = {
     instances    = 1
     prefix       = "simple"
+    db_password  = "examplepassword"
     image        = "nginx:alpine"
     host_port    = 8080
 
@@ -18,6 +19,7 @@ deployment "complex" {
   inputs = {
     instances    = 1    
     prefix       = "complex"
+    db_password  = "examplepassword"
     image        = "nginx:alpine"
     host_port    = 8081
 

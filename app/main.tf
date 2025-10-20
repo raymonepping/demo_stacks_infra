@@ -11,14 +11,34 @@ terraform {
 }
 
 # Optional inputs if you want to override later
-variable "image" { type     = string default = "nginx:alpine" }
-variable "name" { type      = string default = "hug-nginx" }
-variable "host_port" { type = number default = 8080 }
+variable "image" { 
+  type = string 
+  default = "nginx:alpine" 
+}
+
+variable "name" { 
+  type = string 
+  default = "hug-nginx" 
+}
+
+variable "host_port" { 
+  type = number 
+  default = 8080 
+}
 
 # Optional attachments
-variable "network_name" { type = string default = null }
-variable "volume_name"  { type = string default = null }
-variable "mount_path"   { type = string default = "/usr/share/nginx/html" }
+variable "network_name" { 
+  type = string 
+  default = null 
+}
+variable "volume_name"  { 
+  type = string 
+  default = null 
+}
+variable "mount_path"   { 
+  type = string 
+  default = "/usr/share/nginx/html" 
+}
 
 resource "docker_image" "nginx" {
   name         = var.image

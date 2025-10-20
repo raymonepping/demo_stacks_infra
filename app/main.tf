@@ -40,6 +40,15 @@ variable "mount_path"   {
   default = "/usr/share/nginx/html" 
 }
 
+variable "volume_names" {
+  type    = list(string)
+  default = []
+}
+variable "volume_mounts" {
+  type    = map(string)
+  default = {}
+}
+
 resource "docker_image" "nginx" {
   name         = var.image
   keep_locally = false
@@ -62,18 +71,24 @@ resource "docker_container" "nginx" {
     }
   }
 
-  # Attach volume if provided
+  # Attach any number of named volumes
   dynamic "volumes" {
-    for_each = var.volume_name == null ? [] : [var.volume_name]
+    for_each = var.volume_names
     content {
-      container_path = var.mount_path
-      read_only      = false
       volume_name    = volumes.value
+      # Use provided mount if present, else default to /data/<volume_name>
+      container_path = lookup(var.volume_mounts, volumes.value, format("/data/%s", volumes.value))
+      read_only      = false
     }
   }
 
   restart = "unless-stopped"
 }
 
-output "nginx_container_name" { value = docker_container.nginx.name }
-output "nginx_container_port" { value = docker_container.nginx.ports[0].external }
+output "nginx_container_name" { 
+  value = docker_container.nginx.name 
+}
+
+output "nginx_container_port" { 
+  value = docker_container.nginx.ports[0].external 
+}

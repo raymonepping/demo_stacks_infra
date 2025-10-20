@@ -24,6 +24,15 @@ variable "network_name"   {
   default = "stacks_net" 
 }
 
+variable "volume_names" {
+  type    = list(string)
+  default = []
+}
+variable "volume_mounts" {
+  type    = map(string)
+  default = {}
+}
+
 variable "volume_name"    { 
   type = string
   default = "stacks_vol" 
@@ -60,10 +69,11 @@ component "network" {
   providers = { docker = provider.docker.this }
 }
 
-# Storage component (./storage)
+# Storage components (./storage): create one named volume per entry
 component "storage" {
-  source = "./storage"
-  inputs = { name = var.volume_name }
+  for_each  = toset(var.volume_names)
+  source    = "./storage"
+  inputs    = { name = each.value }
   providers = { docker = provider.docker.this }
 }
 
@@ -74,8 +84,8 @@ component "app" {
     image        = var.image
     host_port    = var.host_port
     network_name = var.network_name
-    volume_name  = var.volume_name
-    mount_path   = var.mount_path
+    volume_names  = var.volume_names
+    volume_mounts = var.volume_mounts
   }
   providers  = { docker = provider.docker.this }
   depends_on = [component.network, component.storage]

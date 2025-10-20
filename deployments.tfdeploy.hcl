@@ -1,6 +1,30 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+# ---------- Publish selected outputs for other Stacks ----------
+
+# Development
+publish_output "dev_app_url" {
+  description = "URL for the development app"
+  value       = deployment.development.app_url
+}
+
+publish_output "dev_network_name" {
+  description = "Docker network name for development"
+  value       = deployment.development.docker_network_name
+}
+
+# Production
+publish_output "prod_app_url" {
+  description = "URL for the production app"
+  value       = deployment.production.app_url
+}
+
+publish_output "prod_network_name" {
+  description = "Docker network name for production"
+  value       = deployment.production.docker_network_name
+}
+
 deployment "development" {
   inputs = {
     instances    = 1
@@ -20,8 +44,6 @@ deployment "development" {
       "stacks_vol_dev_logs"    = "/var/log/nginx"
     }
 
-#    volume_name  = "stacks_vol_development"
-#    mount_path   = "/usr/share/nginx/html"
   }
 }
 
@@ -42,7 +64,6 @@ deployment "production" {
       "stacks_vol_prod_content" = "/usr/share/nginx/html"
       "stacks_vol_prod_logs"    = "/var/log/nginx"
     }    
-#    volume_name  = "stacks_vol_production"
-#    mount_path   = "/usr/share/nginx/html"
+
   }
 }

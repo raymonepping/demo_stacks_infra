@@ -90,3 +90,32 @@ component "app" {
   providers  = { docker = provider.docker.this }
   depends_on = [component.network, component.storage]
 }
+
+# ---------- Stack Outputs (visible in HCP UI) ----------
+
+# App container details (from the app component/module outputs)
+output "app_container_name" {
+  description = "Container name for the app"
+  type        = string
+  value       = component.app.nginx_container_name
+}
+
+output "app_container_port" {
+  description = "Host port mapping for the app"
+  type        = number
+  value       = component.app.nginx_container_port
+}
+
+# Handy URL (assumes localhost on the agent host; adjust if proxied)
+output "app_url" {
+  description = "Local URL to reach the app (agent host)"
+  type        = string
+  value       = "http://localhost:${component.app.nginx_container_port}"
+}
+
+# Network + volume names (what other stacks typically need)
+output "docker_network_name" {
+  description = "Name of the Docker network created by this stack"
+  type        = string
+  value       = var.network_name
+}

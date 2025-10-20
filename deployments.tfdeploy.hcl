@@ -3,6 +3,7 @@
 
 deployment "simple" {
   inputs = {
+    instances    = 1
     prefix       = "simple"
     image        = "nginx:alpine"
     host_port    = 8080
@@ -15,6 +16,7 @@ deployment "simple" {
 
 deployment "complex" {
   inputs = {
+    instances    = 1    
     prefix       = "complex"
     image        = "nginx:alpine"
     host_port    = 8081

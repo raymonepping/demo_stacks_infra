@@ -60,11 +60,13 @@ component "storage" {
 component "app" {
   source = "./app"
   inputs = {
-    name      = "hug-nginx-${var.prefix}"
-    image     = var.image
-    host_port = var.host_port
+    name         = "hug-nginx-${var.prefix}"
+    image        = var.image
+    host_port    = var.host_port
+    network_name = component.network.outputs.name
+    volume_name  = component.storage.outputs.name
+    mount_path   = var.mount_path
   }
-  providers = {
-    docker = provider.docker.this
-  }
+  providers  = { docker = provider.docker.this }
+  depends_on = [component.network, component.storage]
 }

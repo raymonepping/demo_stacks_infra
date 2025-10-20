@@ -39,46 +39,9 @@ required_providers {
     source  = "kreuzwerker/docker"
     version = "~> 3.0"
   }
-
-#  random = {
-#    source  = "hashicorp/random"
-#    version = "~> 3.7.2"
-#  }
-
-#  null = {
-#    source  = "hashicorp/null"
-#    version = "~> 3.2.2"
-#  }
 }
 
-# provider "random" "this" {}
-# provider "null" "this" {}
 provider "docker" this {}
-
-# component "pet" {
-#  source = "./pet"
-
-#  inputs = {
-#    prefix = var.prefix
-#  }
-
-#  providers = {
-#    random = provider.random.this
-#  }
-#}
-
-#component "nulls" {
-#  source = "./nulls"
-
-#  inputs = {
-#    pet       = component.pet.name
-#    instances = var.instances
-#  }
-
-#  providers = {
-#    random = provider.random.this
-#  }
-#}
 
 # Network component (./network)
 component "network" {

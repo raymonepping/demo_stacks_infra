@@ -19,50 +19,79 @@ variable "image" {
   default = "nginx:alpine"
 }
 
+variable "network_name"   { 
+  type = string, 
+  default = "stacks_net" 
+}
+
+variable "volume_name"    { 
+  type = string, 
+  default = "stacks_vol" 
+}
+
+variable "mount_path"     { 
+  type = string, 
+  default = "/usr/share/nginx/html" 
+}
+
 required_providers {
   docker = {
     source  = "kreuzwerker/docker"
     version = "~> 3.0"
   }
 
-  random = {
-    source  = "hashicorp/random"
-    version = "~> 3.7.2"
-  }
+#  random = {
+#    source  = "hashicorp/random"
+#    version = "~> 3.7.2"
+#  }
 
-  null = {
-    source  = "hashicorp/null"
-    version = "~> 3.2.2"
-  }
+#  null = {
+#    source  = "hashicorp/null"
+#    version = "~> 3.2.2"
+#  }
 }
 
-provider "random" "this" {}
-provider "null" "this" {}
+# provider "random" "this" {}
+# provider "null" "this" {}
 provider "docker" this {}
 
-component "pet" {
-  source = "./pet"
+# component "pet" {
+#  source = "./pet"
 
-  inputs = {
-    prefix = var.prefix
-  }
+#  inputs = {
+#    prefix = var.prefix
+#  }
 
-  providers = {
-    random = provider.random.this
-  }
+#  providers = {
+#    random = provider.random.this
+#  }
+#}
+
+#component "nulls" {
+#  source = "./nulls"
+
+#  inputs = {
+#    pet       = component.pet.name
+#    instances = var.instances
+#  }
+
+#  providers = {
+#    random = provider.random.this
+#  }
+#}
+
+# Network component (./network)
+component "network" {
+  source = "./network"
+  inputs = { name = var.network_name }
+  providers = { docker = provider.docker.this }
 }
 
-component "nulls" {
-  source = "./nulls"
-
-  inputs = {
-    pet       = component.pet.name
-    instances = var.instances
-  }
-
-  providers = {
-    null = provider.null.this
-  }
+# Storage component (./storage)
+component "storage" {
+  source = "./storage"
+  inputs = { name = var.volume_name }
+  providers = { docker = provider.docker.this }
 }
 
 component "app" {

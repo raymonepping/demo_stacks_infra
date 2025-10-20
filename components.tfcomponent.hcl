@@ -63,8 +63,8 @@ component "app" {
     name         = "hug-nginx-${var.prefix}"
     image        = var.image
     host_port    = var.host_port
-    network_name = component.network.outputs.name
-    volume_name  = component.storage.outputs.name
+    network_name = var.network_name
+    volume_name  = var.volume_name
     mount_path   = var.mount_path
   }
   providers  = { docker = provider.docker.this }

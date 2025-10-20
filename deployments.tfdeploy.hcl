@@ -25,6 +25,48 @@ publish_output "prod_network_name" {
   value       = deployment.production.docker_network_name
 }
 
+# ---------- Orchestration rules (Premium) ----------
+
+# Approve if plan has ZERO changes (explicit even though there is a built-in empty_plan rule)
+deployment_auto_approve "no_changes" {
+  check {
+    condition = context.plan.changes.total == 0
+    reason    = "Auto-approve only when the plan is empty."
+  }
+}
+
+# Approve if there are NO destroys in the plan (good for production protection)
+deployment_auto_approve "no_destroys" {
+  check {
+    condition = context.plan.changes.remove == 0
+    reason    = "Auto-approve is blocked when any destroy is present."
+  }
+}
+
+# Dev convenience: small additive plans only (<= 3 total changes, no destroys)
+deployment_auto_approve "low_risk" {
+  check {
+    condition = context.plan.changes.total <= 3 && context.plan.changes.remove == 0
+    reason    = "Auto-approve low-risk changes in development."
+  }
+}
+
+deployment_group "development_group" {
+  auto_approve_checks = [
+    deployment_auto_approve.no_changes,
+    deployment_auto_approve.low_risk,
+  ]
+}
+
+deployment_group "production_group" {
+  auto_approve_checks = [
+    deployment_auto_approve.no_changes,
+    deployment_auto_approve.no_destroys,
+  ]
+}
+
+# ---------- Deployments ----------
+
 deployment "development" {
   inputs = {
     instances    = 1

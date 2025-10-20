@@ -104,5 +104,4 @@ component "app" {
   providers = {
     docker = provider.docker.this
   }
-  depends_on = [component.pet]
 }

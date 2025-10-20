@@ -44,20 +44,6 @@ variable "be_host_port" {
   default = 9000 
 }
 
-variable "db_host_port" { 
-  type = number  
-  default = 5432 
-}
-
-variable "db_password"  { 
-  type = string 
-}
-
-variable "db_volume_name" { 
-  type = string 
-  default = "stacks_db_vol" 
-}
-
 required_providers {
   docker = {
     source  = "kreuzwerker/docker"
@@ -93,50 +79,4 @@ component "app" {
   }
   providers  = { docker = provider.docker.this }
   depends_on = [component.network, component.storage]
-}
-
-component "frontend" {
-  source = "./frontend"
-  inputs = {
-    name         = "frontend-${var.prefix}"
-    image        = "nginx:alpine"
-    host_port    = var.fe_host_port
-    network_name = var.network_name
-  }
-  providers  = { docker = provider.docker.this }
-  depends_on = [component.network]
-}
-
-component "backend" {
-  source = "./backend"
-  inputs = {
-    name         = "backend-${var.prefix}"
-    image        = "hashicorp/http-echo"
-    host_port    = var.be_host_port
-    message      = "hello from ${var.prefix}"
-    network_name = var.network_name
-  }
-  providers  = { docker = provider.docker.this }
-  depends_on = [component.network]
-}
-
-component "db_storage" {
-  source    = "./storage"
-  inputs    = { name = var.db_volume_name }
-  providers = { docker = provider.docker.this }
-}
-
-component "database" {
-  source = "./database"
-  inputs = {
-    name         = "postgres-${var.prefix}"
-    image        = "postgres:16"
-    host_port    = var.db_host_port
-    db_password  = var.db_password
-    network_name = var.network_name
-    volume_name  = var.db_volume_name
-    data_path    = "/var/lib/postgresql/data"
-  }
-  providers  = { docker = provider.docker.this }
-  depends_on = [component.network, component.db_storage]
 }

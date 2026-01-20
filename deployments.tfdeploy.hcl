@@ -32,7 +32,7 @@ deployment "development" {
     instances    = 1
     prefix       = "development"
     image        = "nginx:alpine"
-    host_port    = 8080
+    host_port    = 8081
 
     network_name = "stacks_net_development"
 

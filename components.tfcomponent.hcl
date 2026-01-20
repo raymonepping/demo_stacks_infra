@@ -11,7 +11,7 @@ variable "instances" {
 
 variable "host_port" {
   type    = number
-  default = 8080
+  default = 8081
 }
 
 variable "image" {
